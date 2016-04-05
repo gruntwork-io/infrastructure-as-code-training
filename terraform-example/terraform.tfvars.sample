@@ -8,3 +8,6 @@
 
 # The ID of the AMI created by the packer-example
 ami = ""
+
+# The name of a Key Pair that you've created in AWS and have saved on your computer. You will be able to use this Key Pair to SSH to the EC2 instance.
+key_pair_name = ""

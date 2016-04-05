@@ -7,6 +7,7 @@ resource "aws_instance" "example_rails_app" {
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.example_rails_app.name}"]
   user_data = "${template_file.user_data.rendered}"
+  key_name = "${var.key_pair_name}"
 
   tags {
     Name = "Example Rails App"
@@ -29,6 +30,14 @@ resource "aws_security_group" "example_rails_app" {
   ingress {
     from_port = "${var.port}"
     to_port = "${var.port}"
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Inbound SSH from anywhere
+  ingress {
+    from_port = 22
+    to_port = 22
     protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
