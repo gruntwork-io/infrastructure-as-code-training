@@ -10,5 +10,5 @@ in AWS. The AMI is built on top of Ubuntu, has Ruby on Rails installed, and cont
 1. Install [Packer](https://www.packer.io/).
 2. Add your AWS credentials as the environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
 3. Run `packer build simple-web-server.json`.
-4. When the build is done, it'll output the ID of an AMI in `us-east-1` that you can deploy. See the `terraform-example`
-   folder for an example of how to deploy this AMI and run the Ruby on Rails app within it.
+4. When the build is done, it'll output the ID of an AMI in `us-east-1` that you can deploy. See the
+   `terraform-example-full` folder for an example of how to deploy this AMI and run the Ruby on Rails app within it.

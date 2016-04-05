@@ -1,7 +1,4 @@
-provider "aws" {
-  region = "us-east-1"
-}
-
+# Create an EC2 instance
 resource "aws_instance" "example_rails_app" {
   ami = "${var.ami}"
   instance_type = "t2.micro"
@@ -10,10 +7,11 @@ resource "aws_instance" "example_rails_app" {
   key_name = "${var.key_pair_name}"
 
   tags {
-    Name = "Example Rails App"
+    Name = "${var.name}"
   }
 }
 
+# A User Data script that will run when the EC2 instance boots up and start the Ruby on Rails server
 resource "template_file" "user_data" {
   template = "${file("${path.module}/user-data.sh")}"
 
@@ -22,9 +20,10 @@ resource "template_file" "user_data" {
   }
 }
 
+# A Security Group that controls what network traffic can go in and out of the EC2 instance
 resource "aws_security_group" "example_rails_app" {
-  name = "example_rails_app"
-  description = "A Security Group for the Example Rails App"
+  name = "${var.name}"
+  description = "A Security Group for ${var.name}"
 
   # Inbound HTTP from anywhere
   ingress {
