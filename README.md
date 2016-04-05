@@ -7,3 +7,7 @@ This repo contains materials for learning how to use infrastructure-as-code prac
    the code from the example Rails app.
 3. A [Terraform example](/terraform-example) that shows how to take the AMI created by the Packer example, deploy it
    on AWS, and run the example Rails app.
+
+Note: all the code in this repo is used only for demonstration and teaching purposes and should not be used in
+production. If you need help using Packer, Terraform, or any other DevOps tools in production, reach out to us at
+[Atomic Squirrel](http://www.atomic-squirrel.net/).

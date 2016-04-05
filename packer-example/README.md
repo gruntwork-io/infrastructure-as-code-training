@@ -5,7 +5,7 @@ This folder contains an example of how define infrastructure-as-code using [Pack
 in AWS. The AMI is built on top of Ubuntu, has Ruby on Rails installed, and contains the code from the
 `example-rails-app` folder.
 
-## How to use this template
+## Quick start
 
 1. Install [Packer](https://www.packer.io/).
 2. Add your AWS credentials as the environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.

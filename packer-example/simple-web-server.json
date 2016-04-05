@@ -21,5 +21,11 @@
     "type": "file",
     "source": "{{template_dir}}/../example-rails-app",
     "destination": "/home/ubuntu"
+  },{
+    "type": "shell",
+    "inline": [
+      "cd /home/ubuntu/example-rails-app",
+      "bundle install"
+    ]
   }]
 }
