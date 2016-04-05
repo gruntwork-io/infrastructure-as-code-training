@@ -1,6 +1,6 @@
 # Configure the AWS Provider
 provider "aws" {
-  region = "eu-central-1"
+  region = "us-east-1"
 }
 
 # Create an EC2 instance
