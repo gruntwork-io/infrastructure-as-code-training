@@ -9,6 +9,7 @@
 /log/*
 !/log/.keep
 /tmp
+nohup.out
 
 # Rake files
 .generators
