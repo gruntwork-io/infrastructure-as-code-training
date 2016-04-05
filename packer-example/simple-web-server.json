@@ -1,0 +1,25 @@
+{
+  "builders": [{
+    "ami_name": "gruntwork-packer-training-rails-{{isotime | clean_ami_name}}",
+    "ami_description": "An Ubuntu AMI that with Ruby on Rails installed.",
+    "instance_type": "t2.micro",
+    "region": "us-east-1",
+    "type": "amazon-ebs",
+    "source_ami": "ami-fce3c696",
+    "ssh_username": "ubuntu"
+  }],
+  "provisioners": [{
+    "type": "shell",
+    "inline": [
+      "echo 'Sleeping for 30 seconds to give Ubuntu enough time to initialize (otherwise, packages may fail to install).'",
+      "sleep 30"
+    ]
+  },{
+    "type": "shell",
+    "script": "{{template_dir}}/install-rails.sh"
+  },{
+    "type": "file",
+    "source": "{{template_dir}}/../example-rails-app",
+    "destination": "/home/ubuntu"
+  }]
+}

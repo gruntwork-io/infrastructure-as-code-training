@@ -1,0 +1,6 @@
+
+
+Started GET "/assets/rails.png" for 93.47.231.89 at 2016-04-05 14:37:26 +0000
+Connecting to database specified by database.yml
+Sprockets Cache miss "file_digest:app/assets/images/rails.png:1459866924"  (1ms)
+Served asset /rails.png - 200 OK (128ms)
