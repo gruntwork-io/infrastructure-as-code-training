@@ -11,11 +11,12 @@ Note: these Terraform templates create real resources in your AWS account. The r
 Tier](https://aws.amazon.com/free/), but if you've used up all your credits, they may cost you money.
 
 1. Install [Terraform](https://www.terraform.io/).
-2. Rename `terraform.tfvars.sample` to `terraform.tfvars` and follow the instructions in the file to set up variables.
-3. Run `terraform get`.
-4. Run `terraform plan`.
-5. If the plan looks good, run `terraform apply`.
-6. After the templates have been applied, Terraform will output a URL. Once the server is up and running (which can
+1. Open `vars.tf`, set the environment variables specified at the top of the file, and fill in any other variables that
+   don't have a `default`.
+1. Run `terraform get`.
+1. Run `terraform plan`.
+1. If the plan looks good, run `terraform apply`.
+1. After the templates have been applied, Terraform will output a URL. Once the server is up and running (which can
    take 1-2 minutes), visit this URL to test the Rails app. You should see the text "Hello, World".
 
 ## Cleaning up
