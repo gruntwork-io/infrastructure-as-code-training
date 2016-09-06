@@ -53,8 +53,8 @@ resource "aws_eip" "example" {
 }
 ```
 
-Notice how the `instance` parameter is set to `"${aws_instance.example.id}"`. This is dependency on `id` parameter of
-the `aws_instance` you've already created. Terraform now knows that when you `apply` these templates, it needs to
+Notice how the `instance` parameter is set to `"${aws_instance.example.id}"`. This is dependency on the `id` attribute
+of the `aws_instance` you've already created. Terraform now knows that when you `apply` these templates, it needs to
 create the `aws_instance` first, pull out its `id`, and then it can create the `aws_eip`.
 
 ## Cleaning up
