@@ -3,7 +3,7 @@ resource "aws_instance" "example_rails_app" {
   ami = "${var.ami}"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.example_rails_app.name}"]
-  user_data = "${template_file.user_data.rendered}"
+  user_data = "${data.template_file.user_data.rendered}"
   key_name = "${var.key_pair_name}"
 
   tags {
@@ -12,7 +12,7 @@ resource "aws_instance" "example_rails_app" {
 }
 
 # A User Data script that will run when the EC2 instance boots up and start the Ruby on Rails server
-resource "template_file" "user_data" {
+data "template_file" "user_data" {
   template = "${file("${path.module}/user-data.sh")}"
 
   vars {
