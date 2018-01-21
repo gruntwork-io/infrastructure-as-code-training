@@ -8,7 +8,7 @@
     "instance_type": "t2.micro",
     "region": "{{user `region`}}",
     "type": "amazon-ebs",
-    "source_ami": {
+    "source_ami_filter": {
       "filters": {
         "virtualization-type": "hvm",
         "architecture": "x86_64",
