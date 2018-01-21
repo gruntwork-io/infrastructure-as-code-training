@@ -1,11 +1,24 @@
 {
+  "variables": {
+    "region": "us-east-1"
+  },
   "builders": [{
     "ami_name": "gruntwork-packer-training-rails-{{isotime | clean_ami_name}}",
     "ami_description": "An Ubuntu AMI that with Ruby on Rails installed.",
     "instance_type": "t2.micro",
-    "region": "us-east-1",
+    "region": "{{user `region`}}",
     "type": "amazon-ebs",
-    "source_ami": "ami-fce3c696",
+    "source_ami": {
+      "filters": {
+        "virtualization-type": "hvm",
+        "architecture": "x86_64",
+        "name": "*ubuntu-xenial-16.04-amd64-server-*",
+        "block-device-mapping.volume-type": "gp2",
+        "root-device-type": "ebs"
+      },
+      "owners": ["099720109477"],
+      "most_recent": true
+    },
     "ssh_username": "ubuntu"
   }],
   "provisioners": [{
