@@ -18,28 +18,28 @@ data "aws_ami" "amzn_linux" {
   most_recent = true
 
   filter {
-    name = "owner-alias"
+    name   = "owner-alias"
     values = ["amazon"]
   }
 
   filter {
-    name = "root-device-type"
+    name   = "root-device-type"
     values = ["ebs"]
   }
 
   filter {
-    name = "name"
+    name   = "name"
     values = ["amzn-ami-hvm-*"]
   }
 }
 
 # Create an EC2 instance
 resource "aws_instance" "example" {
-  ami = "${data.aws_ami.amzn_linux.image_id}"
+  ami           = data.aws_ami.amzn_linux.image_id
   instance_type = "t2.micro"
-  key_name = "${var.key_pair_name}"
+  key_name      = var.key_pair_name
 
-  tags {
-    Name = "${var.ec2_name}"
+  tags = {
+    Name = var.ec2_name
   }
 }
