@@ -14,4 +14,3 @@ module "example_rails_app" {
   ami           = var.ami
   key_pair_name = var.key_pair_name
 }
-

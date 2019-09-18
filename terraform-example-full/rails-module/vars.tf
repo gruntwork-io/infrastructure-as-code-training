@@ -17,4 +17,3 @@ variable "port" {
   description = "The port the Ruby on Rails app should listen on for HTTP requests"
   type        = number
 }
-
