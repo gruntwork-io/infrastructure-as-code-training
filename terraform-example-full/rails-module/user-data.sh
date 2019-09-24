@@ -11,4 +11,3 @@ echo "Starting Ruby on Rails app on port ${port} and piping all log output to sy
 cd /home/ubuntu/example-rails-app
 export RAILS_ENV=production
 nohup rails s --port=${port} --binding=0.0.0.0 2>&1 | logger &
-

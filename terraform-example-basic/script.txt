@@ -1,0 +1,19 @@
+The next command that we would like to introduce is the terraform apply command. This will be the command that you will most likely use on a day to day basis.
+
+Apply will start by showing you a preview, or plan, of what Terraform intends to do to deploy the provided configuration. The idea behind the plan is to show you what Terraform will do to reflect the configuration live on to AWS.
+
+In this case you are seeing that Terraform intends to create an AWS instance referring to the example resource in the Terraform configuration, and all the properties of that resource. Now some things about this resource are known in advance and others will not be known until the instance is actually created in AWS.
+
+In the plan you will see which things Terraform knows now as the actual values in the properties. In this case, Terraform knows to create the instance with the AMI shown here, and the instance type of t3.micro. On the other hand, some properties like public ip is assigned by AWS after the instance is created, and so is mentioned as "computed" to mean that it will be computed after deployment.
+
+At the end of the plan the apply command will ask if you would like to proceed with the deployment and actually reflect the changes.
+
+What is great about this is that it gives you a chance to sanity check your configuration before actually reflecting potentially destructive changes to your AWS account. If for example, the plan showed that it was about to destroy 5 EC2 instances that you had previously deployed in your account, it should give you pause to cancel the deployment and investigate why Terraform suddenly lost track of 5 instances.
+
+... NEXT SLIDE ...
+
+Once you are satisfied with the intended action, you can confirm the prompt to tell Terraform to apply the changes live to the provider in the configuration. The output should be similar to the plan as the exact plan first shown will be followed during the apply step.
+
+During the apply phase, Terraform will make the appropriate API calls to the provider to provision the resources, and then poll the provider until the desired state is reached. In this case, it will create an EC2 instance and then wait until the instance reaches the running state before completing the step.
+
+At the end of the step you will see a summary of the number of resources that were created, changed, or removed in the process. Here, we added one resource and we haven't changed anything or destroyed anything.

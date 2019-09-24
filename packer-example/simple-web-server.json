@@ -1,6 +1,6 @@
 {
   "variables": {
-    "region": "us-east-1"
+    "region": "us-east-2"
   },
   "builders": [{
     "ami_name": "gruntwork-packer-training-rails-{{isotime | clean_ami_name}}",

@@ -1,15 +1,16 @@
 # Configure the AWS Provider
 provider "aws" {
-  region = "us-east-1"
+  region = "us-east-2"
 }
 
 # Create an EC2 instance
 resource "aws_instance" "example" {
-  # AMI ID for Amazon Linux AMI 2016.03.0 (HVM)
-  ami           = "ami-08111162"
-  instance_type = "t2.micro"
+  # AMI ID for Amazon Linux AMI 2018.03.0 (HVM)
+  ami           = "ami-0c64dd618a49aeee8"
+  instance_type = "t3.micro"
 
-  tags {
+  tags = {
     Name = "example"
   }
 }
+
