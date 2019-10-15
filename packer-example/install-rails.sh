@@ -4,5 +4,5 @@
 set -e
 
 sudo apt-get update
-sudo apt-get install -y rails libsqlite3-dev sqlite3 nodejs ruby-dev
+sudo apt-get install -y rails libsqlite3-dev sqlite3 nodejs
 rails -v
