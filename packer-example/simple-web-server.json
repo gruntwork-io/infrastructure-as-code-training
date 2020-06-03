@@ -3,8 +3,8 @@
     "region": "us-east-2"
   },
   "builders": [{
-    "ami_name": "gruntwork-packer-training-rails-{{isotime | clean_ami_name}}",
-    "ami_description": "An Ubuntu AMI that with Ruby on Rails installed.",
+    "ami_name": "gruntwork-packer-training-rails-{{isotime | clean_resource_name}}",
+    "ami_description": "An Ubuntu AMI that has Ruby on Rails installed.",
     "instance_type": "t2.micro",
     "region": "{{user `region`}}",
     "type": "amazon-ebs",
