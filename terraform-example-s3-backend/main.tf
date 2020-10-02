@@ -1,5 +1,10 @@
-# Configure the Terraform backend
 terraform {
+  # This module is now only being tested with Terraform 0.13.x. However, to make upgrading easier, we are setting
+  # 0.12.26 as the minimum version, as that version added support for required_providers with source URLs, making it
+  # forwards compatible with 0.13.x code.
+  required_version = ">= 0.12.26"
+
+  # Configure the Terraform backend
   backend "s3" {
     # Be sure to change this bucket name and region to match an S3 Bucket you have already created!
     bucket = "gruntwork-iac-training"
