@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  s3:
+    build: .
+    entrypoint: /src/list_s3_buckets.sh
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
+    volumes:
+      - .:/src
+      - ./out:/out

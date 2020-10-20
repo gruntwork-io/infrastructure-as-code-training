@@ -7,6 +7,8 @@ This repo contains materials for learning how to use infrastructure-as-code prac
    the code from the example Rails app.
 1. A [Docker example](/docker-example) that shows how to create a Docker container that has Node.js installed and
    runs a simple Node "Hello, World" web server.
+1. A [Docker For Dev example](/docker-for-dev-example) that shows how to simplify the dev cycle with docker-compose
+   and bind-mounting volumes.
 1. A [basic Terraform example](/terraform-example-basic) that shows an intro to Terraform.
 1. A [full Terraform example](/terraform-example-full) that shows more advanced Terraform usage, including how to take
    the AMI created by the Packer example, deploy it on AWS, and run the example Rails app.
