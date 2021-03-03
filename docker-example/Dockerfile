@@ -1,3 +1,5 @@
+# This is example, do not use `latest` tag in real life, please.
+# Details: https://vsupalov.com/docker-latest-tag/
 FROM ubuntu:latest
 LABEL maintainer="Yevgeniy Brikman <jim@gruntwork.io>"
 
