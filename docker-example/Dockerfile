@@ -1,4 +1,4 @@
-# This is example, do not use `latest` tag in real life, please.
+# In this example, we use the 'latest' tag for simplicity. In production code, we recommend pinning to a more specific version.
 # Details: https://vsupalov.com/docker-latest-tag/
 FROM ubuntu:latest
 LABEL maintainer="Yevgeniy Brikman <jim@gruntwork.io>"
