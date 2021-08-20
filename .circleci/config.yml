@@ -1,79 +1,107 @@
-env: &env
-  environment:
-    GRUNTWORK_INSTALLER_VERSION: v0.0.21
-    TERRATEST_LOG_PARSER_VERSION: v0.13.24
-    MODULE_CI_VERSION: v0.31.0
-    TERRAFORM_VERSION: 0.15.5
-    PACKER_VERSION: 1.6.1
-    GOLANG_VERSION: 1.16
-    GO111MODULE: auto
 defaults: &defaults
   machine:
     enabled: true
     image: "ubuntu-1604:201903-01"
-  <<: *env
+env: &env
+  environment:
+    GRUNTWORK_INSTALLER_VERSION: v0.0.21
+    TERRATEST_LOG_PARSER_VERSION: v0.34.7
+    TERRAFORM_VERSION: 0.15.1
+    TERRAGRUNT_VERSION: v0.29.0
+    PACKER_VERSION: NONE
+    KUBECTL_VERSION: NONE
+    GOLANG_VERSION: 1.16
+    GO111MODULE: auto
 install_gruntwork_utils: &install_gruntwork_utils
   name: install gruntwork utils
   command: |
     curl -Ls https://raw.githubusercontent.com/gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh | bash /dev/stdin --version "${GRUNTWORK_INSTALLER_VERSION}"
-    gruntwork-install --module-name "gruntwork-module-circleci-helpers" --repo "https://github.com/gruntwork-io/terraform-aws-ci" --tag "${MODULE_CI_VERSION}"
-    gruntwork-install --module-name "git-helpers" --repo "https://github.com/gruntwork-io/terraform-aws-ci" --tag "${MODULE_CI_VERSION}"
-    gruntwork-install --binary-name "terratest_log_parser" --repo "https://github.com/gruntwork-io/terratest" --tag "${TERRATEST_LOG_PARSER_VERSION}"configure-environment-for-gruntwork-module \
+    gruntwork-install --module-name "gruntwork-module-circleci-helpers" --repo "https://github.com/gruntwork-io/terraform-aws-ci" --branch "$CIRCLE_BRANCH" --tag "$CIRCLE_TAG"
+    gruntwork-install --module-name "kubernetes-circleci-helpers" --repo "https://github.com/gruntwork-io/terraform-aws-ci" --branch "$CIRCLE_BRANCH" --tag "$CIRCLE_TAG"
+    gruntwork-install --module-name "git-helpers" --repo "https://github.com/gruntwork-io/terraform-aws-ci" --branch "$CIRCLE_BRANCH" --tag "$CIRCLE_TAG"
+    gruntwork-install --binary-name "terratest_log_parser" --repo "https://github.com/gruntwork-io/terratest" --tag "${TERRATEST_LOG_PARSER_VERSION}"
+    # We purposely don't pass in the go src path since "go get" doesn't work with local module references.
+    configure-environment-for-gruntwork-module \
       --terraform-version ${TERRAFORM_VERSION} \
+      --terragrunt-version ${TERRAGRUNT_VERSION} \
       --packer-version ${PACKER_VERSION} \
+      --kubectl-version ${KUBECTL_VERSION} \
       --go-version ${GOLANG_VERSION}
-version: 2.0
+# Same as install_gruntwork_utils, only configures with dep
+install_gruntwork_utils_dep: &install_gruntwork_utils_dep
+  name: install gruntwork utils
+  command: |
+    curl -Ls https://raw.githubusercontent.com/gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh | bash /dev/stdin --version "${GRUNTWORK_INSTALLER_VERSION}"
+    gruntwork-install --binary-name "terratest_log_parser" --repo "https://github.com/gruntwork-io/terratest" --tag "${TERRATEST_LOG_PARSER_VERSION}"
+    gruntwork-install --module-name "gruntwork-module-circleci-helpers" --repo "https://github.com/gruntwork-io/terraform-aws-ci" --branch "$CIRCLE_BRANCH" --tag "$CIRCLE_TAG"
+    configure-environment-for-gruntwork-module \
+      --terraform-version ${TERRAFORM_VERSION} \
+      --terragrunt-version ${TERRAGRUNT_VERSION} \
+      --packer-version ${PACKER_VERSION} \
+      --kubectl-version ${KUBECTL_VERSION} \
+      --go-version ${GOLANG_VERSION} \
+      --use-gopath \
+      --use-go-dep \
+      --go-src-path ./testdep/fixtures/hello-world-godep-app \
+      --go-src-path ./testdep
+version: 2
 jobs:
-  build:
+  precommit:
     <<: *env
     docker:
       - image: circleci/python:3.8.1
     steps:
       - checkout
       - run:
-          <<: *install_gruntwork_utils
-      - run:
-          name: run pre-commit hooks
+          name: install dependencies
           command: |
-            # Install the latest minor version for v2
-            pip install pre-commit~=2.9
+            curl -Ls https://raw.githubusercontent.com/gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh | bash /dev/stdin --version "${GRUNTWORK_INSTALLER_VERSION}"
+            gruntwork-install --module-name "gruntwork-module-circleci-helpers" --repo "https://github.com/gruntwork-io/terraform-aws-ci" --branch "$CIRCLE_BRANCH" --tag "$CIRCLE_TAG"
+            configure-environment-for-gruntwork-module \
+              --terraform-version ${TERRAFORM_VERSION} \
+              --terragrunt-version NONE \
+              --packer-version NONE \
+              --kubectl-version NONE \
+              --go-version ${GOLANG_VERSION}
+      # Fail the build if the pre-commit hooks don't pass. Note: if you run pre-commit install locally, these hooks will
+      # execute automatically every time before you commit, ensuring the build never fails at this step!
+      - run:
+          command: |
+            pip install pre-commit==1.21.0 cfgv==2.0.1 zipp==1.1.0 yapf
             pre-commit install
             pre-commit run --all-files
   test:
     <<: *defaults
+    <<: *env
     steps:
       - checkout
-      # Install gruntwork utilities
       - run:
           <<: *install_gruntwork_utils
       - run:
-          name: run tests
           command: |
-            mkdir -p /tmp/logs
-            run-go-tests --path ./test --timeout 1h --parallelism 64 | tee /tmp/logs/all.log
+            run-go-tests --path test --timeout 60m  --packages . | (tee /tmp/logs/test-all.log || true)
           no_output_timeout: 3600s
-      - run:
-          command: terratest_log_parser --testlog /tmp/logs/all.log --outputdir /tmp/logs
-          when: always
-      - store_artifacts:
-          path: /tmp/logs
-      - store_test_results:
-          path: /tmp/logs
 workflows:
   version: 2
-  build-and-test:
+  test_and_deploy:
     jobs:
-      - build:
+      # We have to explicitly tell CircleCi to run on all tags and branches, or tag commits/pushes will not trigger
+      # builds: https://circleci.com/docs/2.0/workflows/#git-tag-job-execution.
+      - precommit:
           filters:
+            branches:
+              only: /.*/
             tags:
-              only: /^v.*/
+              only: /.*/
           context:
             - Gruntwork Admin
       - test:
           requires:
-            - build
+            - precommit
           filters:
+            branches:
+              only: /.*/
             tags:
-              only: /^v.*/
+              only: /.*/
           context:
             - Gruntwork Admin
